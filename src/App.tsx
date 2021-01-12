@@ -5,12 +5,12 @@ import RtcEngine, {RtcLocalView, RtcRemoteView} from 'react-native-agora';
 import styles from './Style';
 
 const App: React.FC = () => {
-  const LocalView = RtcLocalView.SurfaceView;
-  const RemoteView = RtcRemoteView.SurfaceView;
+  const LocalView = RtcLocalView.TextureView;
+  const RemoteView = RtcRemoteView.TextureView;
   let engine = useRef<RtcEngine | null>(null);
 
-  const appid: string = 'APPID';
-  const channelName: string = 'channel-x';
+  const appid: string = '';
+  const channelName: string = 'any-channel';
   const [joinSucceed, setJoinSucceed] = useState<boolean>(false);
   const [peerIds, setPeerIds] = useState<Array<number>>([]);
 
@@ -87,13 +87,20 @@ const App: React.FC = () => {
             <View style={styles.fullView}>
               {peerIds.length > 0 ? (
                 peerIds.map((peerId: number) => (
-                  <RemoteView
-                    style={styles.half}
-                    channelId={channelName}
-                    uid={peerId}
-                    key={peerId}
-                    renderMode={1}
-                  />
+                  <View
+                    style={[
+                      styles.half,
+                      {
+                        borderRadius: 100,
+                        margin: 10,
+                        borderColor: 'blue',
+                        borderWidth: 2,
+                        overflow: 'hidden',
+                      },
+                    ]}
+                    key={peerId}>
+                    <RemoteView style={{flex: 1}} uid={peerId} />
+                  </View>
                 ))
               ) : (
                 <View>
@@ -102,9 +109,6 @@ const App: React.FC = () => {
               )}
               <LocalView
                 style={styles.localVideoStyle} //view for local videofeed
-                channelId={channelName}
-                renderMode={1}
-                zOrderMediaOverlay={true}
               />
             </View>
           )}
